@@ -1,0 +1,266 @@
+---
+title: "ECS 132 - Homework #2"
+author:  Bishal Thapa,  \break bthapa@ucdavis.edu # Include your name, and UC Davis email
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+\pagebreak[4]
+
+# Problem 1
+
+3 cards are drawn from a deck of 52 cards in succession without replacement. We define the following events:  
+1. $A_1$: 1st card is a Red ace  
+2. $A_2$: 2nd card is a 10 or a jack  
+3. $A_3$: 3rd card is greater than 3 but less than 7  
+The events are independent.
+$$
+  \begin{aligned}
+    A_1 &= \frac{2}{52} \\
+    A_2 &= 4*\frac{1}{51} + 4*\frac{1}{51} \\
+    A_3 &= 4*\frac{3}{50} \\
+    (A_1 \cap A_2 \cap A_3) &= P(A_1) * P(A_2) * P(A_3) \\
+                            &= \frac{8}{5525} = 0.00145
+  \end{aligned}
+$$  
+  
+# Problem 2
+Suppose you have two coins in your pocket. One of the coin is a fair coin and the other is a two headed coin.  
+1. Suppose you randomly pick one of the coins and toss it and it lands a head. What is the probability that you picked the fair coin?  
+2. Suppose you throw the coin again and it again lands a head. What is the probability that you picked the fake coin?    
+
+Let the following represent the probablities:
+$A$: coin lands on head
+$B$: coin lands on tail
+$X$: fair coin chosen
+$Y$: fake coin chosen 
+
+## 2.1
+$$
+  \begin{aligned}
+    P(X|A) &= \frac{P(A|X)*P(X)}{P(A)} \\
+           &= \frac{(1/2)*(1/2)}{(3/4)} \\
+           &= \frac{1}{3}
+  \end{aligned}
+$$
+  
+## 2.2
+$$
+  \begin{aligned}
+    P(Y|AA) &= \frac{P(AA|Y)*P(Y)}{P(AA)} \\
+           &= \frac{1*\frac{1}{2}}{P(AA|Y)*P(Y) + P(AA|X)*P(X)} \\
+           &= \frac{\frac{1}{2}}{1*\frac{1}{2}+\frac{1}{4}*\frac{1}{2}} \\
+           &= \frac{\frac{1}{2}}{\frac{4}{5}} \\
+           &= \frac{4}{5}
+  \end{aligned}
+$$
+  
+\pagebreak  
+
+# Problem 3
+Prostrate cancer is very common in men. To determine if a person has Prostrate cancer doctor soften perform a test that measures the level of the prostrate specific antigen (PSA) that is produced by the prostrate gland. Although PSA levels are indicative of cancer, the test is highly unrelaible. The probability that a non-cancerous man will have a elevated PSA level is 0.135 which increases to 0.268 if the man does have cancer. Suppose based on other factors the doctor is 70% certain that a man has prostrate cancer, what is the conditional probability that he has cancer given  
+1. the test indicated an elevated PSA level?  
+2. the test did not indicate an elevated PSA level?  
+
+Let the following variables represent the events:  
+$A$ = patient does not have cancer  
+$B$ = patient has cancer  
+$X$ = elevated PSA level indicated  
+$Y$ = non-elevated PSA level indicated  
+
+## 3.1
+$$
+  \begin{aligned}
+    P(B|X) &= \frac{P(X|B)*P(B)}{P(X|B)*P(B)+P(X|A)*P(A)} \\
+           &= \frac{0.268 * .7}{0.268 * .7 + 0.135 * .3} \\
+           &= 0.8224
+  \end{aligned}
+$$
+  
+## 3.2
+$$
+  \begin{aligned}
+    P(B|Y) &= \frac{P(Y|B)*P(B)}{P(Y|B)*P(B)+P(Y|A)*P(A)} \\
+           &= \frac{(1-0.268) * .7}{(1-0.268) * .7 + (1-0.135) * .3} \\
+           &= 0.6638
+  \end{aligned}
+$$
+\pagebreak  
+
+
+# Problem 4
+Consider a parallel system with $n$ components. Each component works with probability $p$. The system works if only one of them works. Given that the system is functioning, what is the probability that component 1 is working. Answer the question for $n= 4$ and $p= 0.5$.  
+Let the following variables represent the events:  
+
+$A_i$:   component i is working  
+$A^C_i$: component i is not working ( complement )  
+$W$: system is functioning  
+
+$$
+  \begin{aligned}
+  P(W) &= 1 - ( P(A^C_1)*P(A^C_2)*P(A^C_3)*P(A^C_4)) \\
+       &= 1 - (.5)(.5)(.5)(.5) \\
+       &= 1 - 0.03125 = 0.9375 \\
+  P(A_1|W) &= \frac{P(A_1 \cap W)}{P(W)} \\
+           &= \frac{P(A_1)}{P(W)} \\
+           &= \frac{0.5}{0.9375} \\
+           &= 0.5333
+  \end{aligned}
+$$
+  
+# Problem 5
+Consider a family of 3 children. Let A be the event that the family has children of both sexes. Let B be the event that there is at most one girl. Are events A and B independent? Answer the same question for a family of 4 children.  
+## 5.1
+$$
+\begin{aligned}
+ Sample \ Space &= \{ BBB, BBG, BGB, BGG, GBB, GBG, GGB, GGG\} \\
+ P(A)           &= 6/8 \\
+ P(B)           &= 4/8 \\
+ P(A \cap B)    &= 3/8 \\
+ P(A)*P(B)      &= 3/8
+\end{aligned}
+$$  
+Yes, they are independent.  
+
+## 5.2
+$$
+\begin{aligned}
+ Sample \ Space &= \{BBBB,BBBG,BBGB,BBGG,BGBB,BGBG,BGGB,BGGG,\\
+                &GBBB,GBBG,GBGB,GBGG,GGBB,GGBG,GGGB,GGGG\} \\
+ P(A)           &= 14/16 \\
+ P(B)           &= 5/16 \\
+ P(A \cap B)    &= 4/16 \\
+ P(A)*P(B)      &= 35/128
+\end{aligned}
+$$  
+No, they are not independent.   
+  
+# Problem 6
+Let $X$ be a random variable that denotes the difference beteween the number of heads and number of tails when a coin is tossed 3 times. What values does the random variable take? Find the PMF.  
+Sample space = {HHH,HHT,HTH,HTT,THH,THT,TTH,TTT}  
+$X$ = {-3,-1,1,3}  
+$X = \frac{|H_i| - |T_i|}{2^n}$, $n$: number of coins, $i$: ith experiment.    
+$$
+\begin{aligned}
+ X = -3  &-> \{TTT\} \\
+ P(X=-3) &= \frac{1}{8} \\
+ X = -1 &-> \{TTH, THT, TTH\} \\
+ P(X=-1) &= 3*\frac{1}{8} = \frac{3}{8} \\
+ X = 1 &-> \{HHT, HTH, HHT\} \\
+ P(X=1) &= 3*\frac{1}{8} = \frac{3}{8} \\
+ X = 3  &-> \{HHH\} \\
+ P(X=3)  &= \frac{1}{8} \\
+\end{aligned}
+$$ 
+```{r pmf, cache=TRUE, echo=TRUE}
+pmf =c(0.125,0.375,0.375,0.125)
+xvalues =c(-3,1,1,3)
+barplot(pmf,names.arg =xvalues,ylim =c(0,0.5),xlab ="i",ylab="P(Y = i)") 
+```
+
+# Problem 7
+The number of jobs that are submitted to a supercomputer in one hour is a random variable $X$ with a probability mass function (pmf) which is given by:  
+$p(i) = \frac{c\lambda^i}{i!} \ i= 0,1,2,3,...$   
+1. Find the value of $c$. The answer will be on terms of $\lambda$.  
+2. Find $P(X= 0)$.  
+3. Find $P(X >2)$.  
+
+## Problem 7.1
+$$
+  \begin{aligned}
+    p(i) &= \frac{c\lambda^i}{i!} \\
+    \sum_{i=0}^{\infty}p(i) &= 1 \\
+    \sum_{i=0}^{\infty}\frac{c\lambda^i}{i!} &= 1 \\
+    c\sum_{i=0}^{\infty}\frac{\lambda^i}{i!} &= 1 \\
+    \sum_{i=0}^{\infty}\frac{\lambda^i}{i!} &= e^\lambda \\
+    c*e^\lambda &= 1 \\
+    c &= e^{-\lambda} \\
+    \end{aligned}
+$$
+  
+## Problem 7.2
+$$
+  \begin{aligned}
+    P(X = 0) = p(0) &= \frac{c\lambda^0}{0!} \\
+                    &= \frac{e^{-\lambda}\lambda^0}{0!} \\
+                    &= \frac{e^{-\lambda}1}{1} \\
+                    &=  e^{-\lambda} \\
+    \end{aligned}
+$$
+  
+## Problem 7.3
+$$
+  \begin{aligned}
+    P(X > 2) &= 1 - P(X \leq 2) \\
+             &= 1 - p(0) - p(1) - p(2) \\
+             &= 1 - e^{-\lambda} - \frac{e^{-\lambda}\lambda^1}{1!} - \frac{e^{-\lambda}\lambda^2}{2!} \\
+             &= 1 - e^{-\lambda} - \frac{e^{-\lambda}\lambda^1}{1} - \frac{e^{-\lambda}\lambda^2}{2} \\
+             &= \frac{2 - 2e^{-\lambda} - 2e^{-\lambda}\lambda - e^{-\lambda}\lambda^2}{2} \\
+    \end{aligned}
+$$
+  
+  
+# Problem 8
+The following problem is known as the Monty Hall after the host of the game show "Let's Make a Deal." There are three curtains. Behind one curtain is a new car, and behind the other two are goats. The game is played as follows. The contestant chooses the curtain that she thinks the car is behind. Monty then opens one of the other curtains to show a goat. (Monty may have more than one goat to choose from; in this case he chooses which goat to show uniformly at random.) the contestant can then stay with the curtain she originally chose or switch to the other unopened curtain. After that, the location of the car is revealed and the contestant wins the car or the remaining goat.  
+1. Should the contestant switch curtains or not, or does it make no difference?    
+2. Write a R-code simulation to determine the probability of the contestant winning the car if she chooses to switch.  
+
+## 8.1
+The contesetnant should switch. Let the following $X, Y, Z$ represent doors in the Monty Hall problem. Say the contestant choses door $X$ and Monty opens door $X$. $P(X|Z)$ represents the probablity that the car is in door $X$ given Monty opens $Z$.   
+$$
+  \begin{aligned}
+    P(X|Z) &= \frac{P(X\cap Z)}{P(Z)} \\
+           &= \frac{\frac{1}{3}*\frac{1}{2}}{P(Z)} \\
+  \end{aligned}
+$$  
+Now, lets say that the contestant switches to door Y.  
+$$
+  \begin{aligned}
+    P(Y|Z) &= \frac{P(Y\cap Z)}{P(Z)} \\
+           &= \frac{\frac{1}{3}*1}{P(Z)} \\
+  \end{aligned}
+$$
+The contestant is almost twice as likely to choose the correct door if they switch rather than staying with their current door.  
+
+## 8.2
+```{r montyHall, cache=TRUE, echo=TRUE}
+exp <- 10000 
+x <- sample(1:3,exp,replace=TRUE) # choose a number: 1,2,3
+door1 <- sum(x == 1)         # each occurance of i (i = 1,2,3), lets say represents how many times the car is in door i
+door2 <- sum(x == 2)
+door3 <- sum(x == 2)
+
+stay <- door1/exp            # say the contestant chooses door 1 to begin with.
+swap <- (door2 + door3)/exp  # say the the car is in either door 2 or 3.
+
+stay
+swap
+```
+By swapping, the contestant is almost twice as likely to pick the correct door, rather than staying with their current door.  
+
+  
+
+# Classmate Collaborators
+
+Include the names and email IDs of everyone you collaborated with. You are free to discuss with your peers but everyone's work must be individual.
+
+1. Nicholas Stapleton, \{nhstaple\}@ucdavis.edu
+
+
+$$
+  \begin{aligned}
+    P(A|B) &= \frac{P(A \cap B)}{P(B)} \\
+    P(A|B)*P(B) &= P(A \cap B) \\
+    P(A|B)*P(B) &= P(B|A)*P(A) \\
+    P(A \cap B) &= P(B|A)*P(A) \\
+    P(A|B) &= \frac{P(A \cap B)}{P(B)} \\
+           &= \frac{P(B|A)*P(A)}{P(B)} \\
+  \end{aligned}
+$$
+

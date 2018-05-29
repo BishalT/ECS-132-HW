@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1523761593572.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "15|11|34|0|\n35|11|39|0|\n40|11|57|2|\n58|11|149|0|\n150|11|217|2|\n218|11|238|0|\n",
+    "hash" : "1609530428",
+    "id" : "FBE6BE5D",
+    "lastKnownWriteTime" : 1523771781,
+    "last_content_update" : 1523771781811,
+    "path" : "C:/Users/ibord/Desktop/ECS 132/HW2/hw2.Rmd",
+    "project_path" : "hw2.Rmd",
+    "properties" : {
+        "cursorPosition" : "217,2",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

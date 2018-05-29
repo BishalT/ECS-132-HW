@@ -1,0 +1,160 @@
+---
+title: "ECS 132 - Homework #5"
+author:  Bishal Thapa,  \break bthapa@ucdavis.edu # Include your name, and UC Davis email
+date: "r Sys.Date()"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+\pagebreak[4]
+
+# Problem 1
+Suppose the network flow size is a normal random variable with parameter $\mu = 71$ GBytes and $\sigma = 2.5$ GBytes.
+1. What percentage of the flows are greater than 72 GBytes?
+2. Suppose flows that are greater than 72 GBytes are clssified as large flows. What percentage of the large flows are greater than 77 GBytes?
+
+## 1.1
+$$
+  \begin{aligned}
+  P(X > 77) &= 1 - \phi(\frac{77-71}{2.5}) \\
+            &= 1 - \phi(2.4) \\
+            &= 1 - 0.9918 \\
+            &= 0.0082
+  \end{aligned}
+$$
+
+
+## 1.2
+$$
+  \begin{aligned}
+  P(Y > 72) &= 1 - \phi(\frac{72-71}{2.5}) \\
+            &= 1 - \phi(0.4) \\
+            &= 1 - 0.6554 \\
+            &= 0.3446 \\
+  P(Y>77 | Y>72) &= \frac{P(Y>72| Y>77)*P(Y>77)}{P(Y>72)} \\
+                 &= \frac{1*(0.0082)}{0.3446} \\
+                 &= 0.238
+  \end{aligned}
+$$
+
+# Problem 2
+Jobs arriving to a computer have been found to require CPU time that can be modelled by an exponentialdistribution with parameter $1/140$ per millisecond.  The CPU scheduling discipline is quantum-oriented sothat jobs not completing within a quantum of 100 milliseconds will be routed back to the tail of the queueof waiting jobs.
+1. Find the probability that an arriving job will be forced to wait for a second quantum.
+2. Of the 800 jobs coming in during a day, how many are expected to finish within the first quantum.
+
+Let $X$ represent the time taken for a task, and $Y$ the number of tasks waiting for the second quantum.
+
+## 2.1
+$$
+  \begin{aligned}
+    P(X > 100) &= 1 - e^{-\lambda*100} \\
+               &= 1 - e^{-\frac{1}{140} * 100} \\
+               &= 0.5105 \\
+  \end{aligned}
+$$
+## 2.2
+$$
+  \begin{aligned}
+  E[Y] &= 800*0.5105 \\
+       &= 408 \\
+  \end{aligned}
+$$
+
+
+# Problem 3
+
+Two core in a CPU serve jobs from a single queue. The time it takes one core to serve a randomly selectedjob is distributed as $Expo(\frac{1}{5})$so that his average service time is 5 minutes. The other, more powerful core's service times are distributed as $Expo(\frac{1}{4})$, averaging 4 minutes. Cores work independently. Both cores are busy and a new job arrives in the queue.
+1.  What is the probability it will be longer than 5 minutes before the new job started to be served?
+2.  Write a R code to simulate the problem and verify the result in Part 1.
+
+Let $X$ represent the 1st CPU, and let $Y$ represent the 2nd CPU. Let $Z$ represent the time before a new process is serviced from the queue.
+
+## 3.1
+$$
+  \begin{aligned}
+  P(Z > 5) &= P(min(X,Y) > 5) \\
+           &= P(X >5) * P(Y > 5) \\
+           &= e^{-\frac{1}{5}*5}) * ^{-\frac{1}{4}*5}) \\
+           &= e^{-\frac{9}{5}} \\
+           &= 0.1653 \\
+  \end{aligned}
+$$
+
+## 3.2
+```{r, cache=TRUE, echo=TRUE }
+
+trails <- 10000
+cpu1Prob <- rexp(trails,1/5)
+cpu2Prob <- rexp(trails,1/4)
+
+count <- 0
+
+for(i in 1:trails){
+  if(cpu1Prob[i] > 5 && cpu2Prob[i] >= 5){
+    count = count + 1
+  }
+}
+
+(count/trails)
+
+```
+  
+# Problem 4
+A parallel system hasnindependent components, each with lifetime distributed as $Expo(\lambda)$.
+1. Show that the cumulative distribution of the lifetime of this system, denoted by $W$, is $F_W(t) = (1-e^{-\lambda t})^n$.
+2. For $n=5$ and $\lambda=\frac{1}{4}$ find the probability $P(W>5)$.
+
+## 4.1
+The CDF for an exponential distribution is given as $1- e^{-\lambda t}$. Since there are $n$ number of componnents which with the same CDF , therefore the CD for this problem is $(1-e^{-\lambda t})^n$.
+
+## 4.2
+$$
+  \begin{aligned}
+    P(W > 5) &= (1-e^{-\lambda t})^n \\
+             &= (1-e^{-{\frac{1}{4}}*5})^5 \\
+             &= 0.1849 \\
+  \end{aligned}
+$$
+
+# Problem 5
+This question deals with the Poisson process and is formulated in terms of a subway station.  It could aswell be formulated in terms of a networking problem (keep in mind a router with input interfaces which arebeing served by the switch fabric in a random process).
+
+Two one-way subway lines, the A train line and the B train line, intersect at a transfer station, A trains and B trains arrive at the station according to independently operating Poisson processes with rates $\lambda_A=3$ trains/hr and $\lambda_B=6$ trains/hr. We assume that passenger boarding and un-boarding occurs almost instantaneously. At a random time, Bart, a prospective passenger, arrives at the station, awaiting an A train. 
+
+[Note that the superposition of two Poisson processes with rates $\lambda_1$ and $\lambda_2$ is also a Poisson process withrate $\lambda_1 + \lambda_2$]
+
+1. What is the probability that the station handles exactly 9 trains during any given hour?
+2. If an observer counts the number of trains that the station handles each hour, starting at 8:00 A.M. onTuesday, what is the expected number of hours until he or she will first count exactly 9 trains duringan hour that commences "on the hour"? (e.g., 9: 00 A.M., 10: 00 A.M., 2: 00 P.M.)
+
+## 5.1
+$$
+  \begin{aligned}
+  \lambda_A + \lambda_B &= 9 \\
+  P(N(t) = x) &= e^{-rt}\frac{(rt)^x}{x!} \\
+              &= e^{-9}\frac{9^9}{9!} \\
+              &= 0.1318 \\
+  \end{aligned}
+$$
+
+## 5.2
+The probablity of the station handling exactly 9 trains in the hour is 0.1318. Therefore, there are $N-1$ failures before the $N^{th}$ hour where it is 9 trains exactly. This becomes a geometrically distributed random variable which succeeeds or fails. There are $N-1$ failures with the $N^{th}$ being a success. The expected success formula for this is $E[X] = \frac{1}{p}$.
+$$
+  \begin{aligned}
+    P(success) &= 0.1318 \\
+    P(failure) &= 1-0.1318 \\
+               &= 0.8682 \\
+    E[X] &= \frac{1}{P(success)} \\
+         &= 7.593
+  \end{aligned}
+$$
+
+# Classmate Collaborators
+
+Inclulde the names and email IDs of everyone you collaborated with. You are free to discuss with your peers but everyone's work must be individual.
+
+1. Brendan Gerrity, bgerrity@ucdavis.edu

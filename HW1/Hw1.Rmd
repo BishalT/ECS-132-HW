@@ -1,0 +1,175 @@
+---
+title: "ECS 132 - Homework #1"
+author:  Bishal Thapa,  \break bthapa@ucdavis.edu # Include your name, and UC Davis email
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+\pagebreak[4]
+
+# Problem 1
+
+Consider the Manhattan grid network shown in Figure 1. Suppose that starting at the point labeled A, you
+can go one step up or one step to the right at each move. This procedure is continued until the point labelled
+B is reached. How many different paths are there from A to B that go through point C?  
+\break
+4 possible paths choices from A to C: { (RR), (RU), (UR), (UU) }, R-right, U-up.  
+2 choices per path. So $4 \choose 2$  
+3 possible path choices from C to B: { (RR), (RU), (UR) }, R-right, U-up.  
+2 choices per path. So $3 \choose 2$   
+Total possible choices $4 \choose 2$ $*$ ${3 \choose 2}$ $=18$ total paths. 
+
+
+
+# Problem 2
+Four (4) fair dice are rolled. What is the probability that the total is 21?
+Possible dice rolls that sum to 21
+\begin{center}
+\begin{tabular}{ |c|c|c|c| }
+ \hline
+ 6 & 6 & 6 & 3 \\
+ 6 & 6 & 5 & 4 \\
+ 6 & 5 & 5 & 5 \\
+ \hline
+\end{tabular}
+\end{center}
+Assuming order does matter, there are $_4 P_1$ permutations of the first and last possibility, and $_{2} P_{4}$ possibilities of 2nd possibility. So 20 total possibilities in total. Total number of possibilities: $6^4$.  
+Probability of the sum being 21: $\frac{20}{1296} = 0.01543 = 1.543\%$.  
+\break
+
+# Problem 3
+Suppose your MP3 player contains 100 songs. 10 of those songs are by your favorite group (say U2).
+Suppose the shuffle feature is used to play the songs in random order.
+
+##Part 3.1
+What is the probability that the first U2 song heard is the 5th song played?
+The first 4 songs start at .9 probablity then decrease by .01 per song. The 5th song has a .1 probability of being U2. Therefore:
+$(0.9)(0.89)(0.88)(0.87)(0.1) = 0.06132$
+
+##Part 3.2
+What is the probability that one of the first five songs played is a U2 song?
+$\frac{90}{100}*\frac{89}{99}*\frac{88}{98}*\frac{87}{97}*\frac{10}{96} = 0.06717$
+Number of permutations: 5.
+Total probablity: $0.06132 * 5 = .3066$
+
+# Problem 4
+A server has 5 incoming packet flows (flows are distinct and uniquely identified by a 5-tuple flow-id). Packets
+from each flow are stored in a circular buffer (in the Linux kernel this is called the Ring Buffer).
+Suppose there are three packets from each flow (packets have sequence numbers and hence are distinguishable)
+which are randomly assigned to locations in the circular buffern of size 15. What is the probability
+that no three packets from the same flow are in adjacent locations in the buffer?  
+
+Let $E_i$, i= 1,2,3, . . . ,10, be the event that packets from the ith flow are placed in adjacent locations in the buffer. The probability the question asks for, denoted by $A$: $A = P(\bigcup\limits_{i=1}^{5} E_{i})$  
+There are $3^{x}$ ways to organize packets from the same flow that are adjacent. Due to this being a circular buffer, there are $(15-1)!$ ways to pick an order. Therefore $(15-x-1)!$, where x is the number of flows which have adjacent packets.  
+
+\begin{align*}
+P(\bigcup\limits_{i=1}^{5}E_{i}) &= \sum_{x=1}^{5}(-1^{x+1}){5 \choose x} 3^x \frac{(15-x-1)!}{(15-1)!}\\
+P(\bigcup\limits_{i=1}^{5}E_{i}) &= {5 \choose 1} 3^1 \frac{(15-1-1)!}{(15-1)!}\\
+                                 &- {5 \choose 2} 3^2 \frac{(15-2-1)!}{(15-1)!}\\
+                                 &+ {5 \choose 3} 3^3 \frac{(15-3-1)!}{(15-1)!}\\
+                                 &- {5 \choose 4} 3^4 \frac{(15-4-1)!}{(15-1)!}\\
+                                 &+ {5 \choose 5} 3^5 \frac{(15-5-1)!}{(15-1)!}\\
+                                 &= 0.6847\\
+1 - P(\bigcup\limits_{i=1}^{5}E_{i}) &= 0.3153 \\
+\end{align*}
+                                     
+
+
+# Problem 5
+##Part 5.1
+Suppose there are 100 memory chips in a box, of which 90 are good and 10 are bad. We withdraw five of
+the 100 chips at random to upgrade a computer. We want to find the probability that all five (5) chips are
+good, $P(AllGood)$.
+$P(AllGood) = {90 \choose 5}/{100 \choose 5}$
+$P(AllGood) = 0.5835$
+
+##Part 5.2
+```{r chips1, cache=TRUE }
+choose(90,5)/choose(100,5)
+```
+
+##Part 5.3
+```{r chips2, cache=TRUE, echo=TRUE }
+# strategy: We will consider numbers 1 - 90 as good and 91 - 100 are defective
+# set.seed(1237)
+m = 10000 # number of samples to simulate
+good = numeric(m) # initialize for use in loop
+for (i in 1:m)
+{
+  pick = sample(1:100, 5) # vector of 5 items from ith experiment
+  good[i] = sum(pick <= 90) # number good in ith experiment
+}
+mean(good == 5)
+```
+Close average to the calculated average from part 2.
+
+##Part 5.4
+Modify the code to determine the probability of all good, P(All Good), for the first 1000 samples and
+plot it.
+
+```{r chips3, cache=TRUE, echo=FALSE, dependson="chips2" }
+n = 1000
+goodChips = numeric(n)
+goodCount = 0;
+m = 10000 # number of samples to simulate
+good2 = numeric(m) # initialize for use in loop
+for (j in 1:n)
+{
+  for (i in 1:m)
+  {
+    pick = sample(1:100, 5) # vector of 5 items from ith experiment
+    good2[i] = sum(pick <= 90) # number good in ith experiment
+    if(good2[i] == 5) goodCount = goodCount + 1
+  }
+  goodChips[j] = goodCount / m
+  goodCount = 0
+}
+plot(goodChips)
+abline(h=mean(good==5), col="red")
+abline(h=0.5835, col="blue")
+
+```
+Red line is the experimental average, Blue line is the theoretical average.
+
+# Problem 6
+Consider a small change in the problem definition of the Birthday paradox. Suppose you walk into a room
+with k people. What is the probability that there will be atleast 1 person with the same birthday as yours.
+Write a R code to plot the probability as a function of k.  
+```{r birthdayPlot, cache=TRUE, echo=FALSE}
+options(warn=-1)
+max = 365
+prob = numeric(max)
+for(x in 1:max){
+  prob[x] = 1-(factorial(x)*(choose(365,x))/365^x)
+}
+plot(prob)
+```
+
+# Problem 7
+Martian birthdays. In his science fiction trilogy on the human colonization of Mars, Kim Stanley Robinson
+arranges the 669 Martian days of the Martian year into 24 months with distinct names [Rob96]. Imagine a time when the Martian population consists entirely of people born on Mars and that birthdays in the Martian born population are uniformly distributed across the year. Write an R-code to determine the value of n such that the probability of a match is just greater than 0.75.
+```{r birthdayPlotKappa, cache=TRUE, echo=TRUE}
+prob = 0
+people = 0;
+while(prob < 0.75){
+  people = people + 1
+  prob = 1-(factorial(people)*(choose(669,people))/669^people)
+}
+prob
+people
+```
+
+# Classmate Collaborators
+
+Inclulde the names and email IDs of everyone you collaborated with. You are free to discuss with your peers but everyone's work must be individual.
+
+1. Brendan Gerrity, bgerrity@ucdavis.edu
+2. Amber Graham, ajgraham@ucdavis.edu
+
+
