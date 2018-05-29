@@ -1,6 +1,6 @@
 ---
 title: "ECS 132 - Homework #6"
-author:  Brendan Gerrity,  \break bgerrity@ucdavis.edu # Include your name, and UC Davis email
+author:  Bishal Thapa,  \break bthapa@ucdavis.edu # Include your name, and UC Davis email
 date: "r Sys.Date()"
 output:
   pdf_document:
@@ -14,78 +14,104 @@ knitr::opts_chunk$set(echo = TRUE)
 \pagebreak[4]
 
 # Problem 1
-Based from the proof from class, and that $Q_i = 1 - P_i$  
+Cars cross a certain point in the highway in accordance with a Poisson process with rate $\lambda$ = 3 cars per minute.  
+1. If I run blindly across the highway it takes me s = 10 seconds to cross the road. Assume that if I am on the highway when a car passes by, then I will be injured. What is the probability that I will be uninjured?     
+2. Suppose that I am agile enough to escape from a single car, but if I encounter 2 or more cars while attempting to cross the highways, I will be injured. However, it now takes me s = 30 seconds to cross the highway. What is the probability that I will be uninjured while crossing the highway?  
 
 ## 1.1
 $$
   \begin{aligned}
-    Q_i &= 1 - P_i \\
-        &= 1 - \frac{1-(\frac{q}{p})^i}{1-(\frac{q}{p})^N}\\
-        &= \frac{{1-(\frac{q}{p})^N} - {1+(\frac{q}{p})^i}}{1-(\frac{q}{p})^N} \\
-        &= \frac{-(\frac{q}{p})^N + (\frac{q}{p})^i}{1-(\frac{q}{p})^N} \\
+    P(Uninjured) &= P(N(s) = 0) = e^{-\lambda*s} \\
+                 &=  e^{-4*\frac{10}{60}} \\
+                 &= 0.5134
   \end{aligned}
 $$
   
 ## 1.2
 $$
   \begin{aligned}
-    Q_i &= \frac{-(\frac{q}{p})^N + (\frac{q}{p})^i}{1-(\frac{q}{p})^N} \\
-        &= \lim_{\frac{p}{q} \to 1} \frac{-(\frac{q}{p})^N + (\frac{q}{p})^i}{1-(\frac{q}{p})^N} \\
-        &= \frac{-N + i}{-N} \\
-        &= \frac{N - i}{N}
+    P(Uninjured) &= P(N(s) = 0 || N(s) = 1) \\
+                 &= e^{-\lambda*s} + \lambda*s*e^{-\lambda*s} \\
+                 &= e^{-4*\frac{30}{60}} + 4*\frac{30}{60}*e^{-4*\frac{30}{60}} \\
+                 &= 0.406
   \end{aligned}
 $$
-
+  
 # Problem 2
-
+Consider a memory system which only allows you to do sequential search. For example a read/write tape drive. If you want to look for a file you have to search sequentially looking at the first file, then the second file and so on until you find the file. A reasonable strategy would be place the most recently retrieved file at the front (imagine that the tape system can magically do this). This way the files that are accessed more often will be "at the front" and require less searching time in the long run. Consider the case with only 3 files A, B, and C.  
+1. Let $X_n$ denote the sequence of the memory system after the nth search. For example, if the files were ordered A and then B followed by C, then $X_0 = ABC$. Enumerate the state space.  
+2. If $X_0 = ABC$, list all possible states of X1.  
+3. If $p_A, p_B$, and $p_C = 1 ??? p_A ??? p_B$ are the probabilities with which files A, B, and C are accessed, respectively, determine the one-step state transition matrix.  
+4. If $pA = 0.6$, $pB = 0.10$, $pC = 0.3$, determine the steady state probability for the file order ABC.  
+5. In general show that the steady state probability of the state ABC is given by
+  
+## 2.1
 $$
   \begin{aligned}
-    P(i) &= \frac{1}{3}P(i+1) + \frac{2}{3}P(i-1) \\
-    P(1) &= \frac{1}{3}P(2) + \frac{2}{3}P(0) \\
-         &= \frac{1}{3}P(2) + 0 \\
-    P(2) &= 3P(1) \\
-    P(3) &= 7P(1) \\
-    P(i) &= (2^i - 1)P(1) \\
-    P(i+2) &= 1 = (2^{i+2} - 1)P(1) \\
-    P(1)   &= \frac{1}{2^{i+2} - 1} = \frac{1}{3}P(2) \\
-    P(2)   &= \frac{3}{2^{i+2} - 1} \\
-           &= \frac{2^i-1}{2^{i+2} - 1} \\
-    P(i)   &= \frac{2^i-1}{2^{i+2} - 1} < \frac{1}{4} \quad \forall i \geq 0\\ 
+    SS &= \{ A, B, C \}
   \end{aligned}
 $$
   
-# Problem 3
-
-D = 0 (Truth) | D = 1 (Lie)  
-T = 0 (Pass)  | T = 1 (Fail)   
-P(T = 0| D = 1) = .1  
-P(T = 1| D = 0) = .2  
+## 2.2
 $$
   \begin{aligned}
-    Sensitivity(n) &= 1 - P(T=1|D=0) = 0.8 \\
-    Specificity(\theta) &= 1 - P(T=0|D=1) = 0.9 \\
+    X_0 &= ABC \\
+    X_1 &= \{ ABC, BAC, CBA \}
   \end{aligned}
-$$  
+$$ 
   
-# Problem 4
+## 2.3
+$$
+  \begin{aligned}
+  P =
+    \begin{bmatrix}
+      p_A & p_B & p_C & 0 & 0 & 0 \\
+      p_A & p_B & 0 & p_C & 0 & 0 \\
+      p_A & 0 & p_C & 0 & p_B & 0 \\
+      0 & p_B & 0 & p_C & 0 & p_A \\
+      0 & 0 & p_C & 0 & p_B & p_A \\
+      0 & 0 & 0 & p_C & p_B & p_A \\
+    \end{bmatrix}
+  \end{aligned}
+$$ 
+  
+## 2.4
+$$
+  \begin{aligned}
+  P &=
+    \begin{bmatrix}
+      p_A & p_B & p_C & 0 & 0 & 0 \\
+      p_A & p_B & 0 & p_C & 0 & 0 \\
+      p_A & 0 & p_C & 0 & p_B & 0 \\
+      0 & p_B & 0 & p_C & 0 & p_A \\
+      0 & 0 & p_C & 0 & p_B & p_A \\
+      0 & 0 & 0 & p_C & p_B & p_A \\
+    \end{bmatrix} \\
+    
+    P_{ABC} &=
+    \begin{bmatrix}
+      0.6 & 0.1 & 0.3 & 0 & 0 & 0 \\
+      0.6 & 0.1 & 0 & 0.3 & 0 & 0 \\
+      0.6 & 0 & 0.3 & 0 & 0.1 & 0 \\
+      0 & 0.1 & 0 & 0.3 & 0 & 0.6 \\
+      0 & 0 & 0.3 & 0 & 0.1 & 0.6 \\
+      0 & 0 & 0 & 0.3 & 0.1 & 0.6 \\
+    \end{bmatrix} 
+    *
+    \begin{bmatrix}
+      0.6 \\
+      0.6 \\
+      0.6 \\
+      0 \\
+      0 \\
+      0 \\
+    \end{bmatrix} \\
+    &= \begin{bmatrix} 0.6 & 0.42 & 0.54 & 0.06 & 0.18 & 0 \end{bmatrix}
+  \end{aligned}
+$$ 
 
-1.  Plot the pdf and the cdf of $X|(D= 1)???Norm(70,15)$ for values 20 to 120.  
-```{r, cache=TRUE, echo=TRUE}
-par(mfrow=c(1,1))
-x =seq(20,120)
-hx =dnorm(x,70,15)
-plot(x, hx,xlim =c(20,120),ylim =c(0,0.05),type='l',ylab="PDF X|D=1",xlab="x")
-```
-  
-2.  Let $x*$ denote the cutoff value such that if $X > x*$ then the test is positive test otherwise it is considered be negative. Plot the ROC curve for values of $x*$ ranging from $52 < x \leq 65$.  
-```{r, cache=TRUE, echo=TRUE}
-par(mfrow=c(1,1))
-x =seq(20,120)
-hx =pnorm(x,70,15)
-plot(x, hx,xlim =c(20,120),ylim =c(0,1),type='l',ylab="CDF X|D=1",xlab="x")
-```
-  
-3.  If False Positive Rate and False Negative Rates are equally bad, determine the value of $x*$.   
+solve(A *{ {0.6, 0.1,0.3,0,0,0}, {0.6,0.1,0,0.3,0 ,0}, {0.6,0,0.3,0,0.1,0}, {0,0.1,0,0.3,0,0.6}, {0,0,0.3,0,0.1,0.6}, {0,0,0,0.3,0.1,0.6} } = A,A)
+
 
 # Classmate Collaborators
 
