@@ -22,8 +22,8 @@ Cars cross a certain point in the highway in accordance with a Poisson process w
 $$
   \begin{aligned}
     P(Uninjured) &= P(N(s) = 0) = e^{-\lambda*s} \\
-                 &=  e^{-4*\frac{10}{60}} \\
-                 &= 0.5134
+                 &=  e^{-3*\frac{10}{60}} \\
+                 &= 0.606
   \end{aligned}
 $$
   
@@ -32,8 +32,8 @@ $$
   \begin{aligned}
     P(Uninjured) &= P(N(s) = 0 || N(s) = 1) \\
                  &= e^{-\lambda*s} + \lambda*s*e^{-\lambda*s} \\
-                 &= e^{-4*\frac{30}{60}} + 4*\frac{30}{60}*e^{-4*\frac{30}{60}} \\
-                 &= 0.406
+                 &= e^{-3*\frac{30}{60}} + 3*\frac{30}{60}*e^{-3*\frac{30}{60}} \\
+                 &= 0.5578
   \end{aligned}
 $$
   
@@ -72,43 +72,12 @@ $$
       0 & 0 & p_C & 0 & p_B & p_A \\
       0 & 0 & 0 & p_C & p_B & p_A \\
     \end{bmatrix}
-  \end{aligned}
+  \end{aligned}  
 $$ 
   
-## 2.4
-$$
-  \begin{aligned}
-  P &=
-    \begin{bmatrix}
-      p_A & p_B & p_C & 0 & 0 & 0 \\
-      p_A & p_B & 0 & p_C & 0 & 0 \\
-      p_A & 0 & p_C & 0 & p_B & 0 \\
-      0 & p_B & 0 & p_C & 0 & p_A \\
-      0 & 0 & p_C & 0 & p_B & p_A \\
-      0 & 0 & 0 & p_C & p_B & p_A \\
-    \end{bmatrix} \\
-    
-    P_{ABC} &=
-    \begin{bmatrix}
-      0.6 & 0.1 & 0.3 & 0 & 0 & 0 \\
-      0.6 & 0.1 & 0 & 0.3 & 0 & 0 \\
-      0.6 & 0 & 0.3 & 0 & 0.1 & 0 \\
-      0 & 0.1 & 0 & 0.3 & 0 & 0.6 \\
-      0 & 0 & 0.3 & 0 & 0.1 & 0.6 \\
-      0 & 0 & 0 & 0.3 & 0.1 & 0.6 \\
-    \end{bmatrix} 
-    *
-    \begin{bmatrix}
-      0.6 \\
-      0.6 \\
-      0.6 \\
-      0 \\
-      0 \\
-      0 \\
-    \end{bmatrix} \\
-    &= \begin{bmatrix} 0.1667 & 0.1667 & 0.1667 & 0.1667 & 0.1667 & 0.1667 \end{bmatrix}
-  \end{aligned}
-$$ 
+  
+## 2.4  
+
 ```{r, cache=TRUE, echo=FALSE}
   P = matrix(0, 6, 6)
 P[1,1] = 0.6
@@ -136,14 +105,21 @@ steady.state = steady.state / sum(steady.state)
 steady.state
 ```
 
-
+## 2.5  
+$$
+  \begin{aligned}
+    \pi_{ABC} &= \frac{p_ap_b}{p_b+p_c} \\
+              &= 0.15 \\
+  \end{aligned}
+$$
   
 # Problem 3
 A typical consumer in an specific market buys brand A with probability 0.8 if his last purchase was brand A and with probability 0.3 if his last purchase was brand B. We model the system as a two state Markov process; state 1 is the state occupied by the consumer if his last purchase was brand A and state 2 is the state occupied if his last purchase was brand B.
-1. Determine the probability transition matric $P$.
+1. Determine the probability transition matrix $P$.
 2. Compute the steady state probabilities compare with $P^{12}$.
   
-## 3.1
+## 3.1  
+
 $$
   \begin{aligned}
   P =
@@ -154,12 +130,12 @@ $$
   \end{aligned}
 $$ 
   
-## 3.2
+## 3.2  
+
 $$
   \begin{aligned}
   \lambda P &= \lambda \\
     \lambda &= \begin{bmatrix} 0.77778 & 0.22222 \end{bmatrix}
-  
   \end{aligned}
 $$ 
 
@@ -174,16 +150,105 @@ P
 steady.state = eigen(P)$vectors[,1]
 steady.state = steady.state / sum(steady.state)
 steady.state
+
+Z <- P %*% P %*% P %*% P %*% P %*% P%*%P %*% P %*% P %*% P %*% P %*% P
+steady.state = eigen(Z)$vectors[,1]
+steady.state = steady.state / sum(steady.state)
+steady.state
 ```
 
 # Problem 4
 For the memory interference problem considered in the class, determine the (one step) probability transitionmatrix P with two processors and three memory modules. Also determine the steady state probabilities $\pi$ .An access requests memory module $M_i$ with probability $p_i$. Compute $\pi$ when $p_1 = 0.5$; $p_2 = 0.25$; $p_3 = 0.25$.You may use the method in the previous problem to determine the steady state probabilities
 
+## 4.1
+\textbf{Solution.} There are 2 CPUs and 3 Memory Modules, So the most amount of requests is 2 among the 3 modules.
+$$
+  \begin{aligned}
+    SS &= \{(1,1,0), (1,0,1), (0,1,1), (2,0,0), (0,2,0), (0,0,2)\} \\
+  \end{aligned}
+$$
+```{r, cache=TRUE, echo=FALSE}
+p1 <- 0.5
+p2 <- 0.25
+p3 <- 0.25
 
+P = matrix(0, 6, 6)
+P[,1] = 2*p1*p2
+P[4,1] = p2
+P[5,1] = p1
 
+P[,2] = 2*p1*p3
+P[6,2] = p1
 
+P[,3] = 2*p1*p3
 
+P[,4] = p1*p1
+
+P[,5] = p2*p2
+
+P[,6] = p3*p3
+
+P
+steady.state = eigen(P)$vectors[,1]
+steady.state = steady.state / sum(steady.state)
+steady.state
+
+```
+
+  
+# Problem 5
+A certain person goes for a run each morning.  When he leaves the house for his run, he is equally likelyto go out either the front or the back door and similarly when he returns, he is equally likely to go to eitherthe front or the back door. The runner owns 3 pairs of running shoes which he takes off after the run atwhichever door he happens to be. If there are no shoes at the door from which he leaves to go running, heruns barefoot. We are interested in determining the proportion of time that he runs barefoot.
+1. Give the states and the one-step transition probability matrix.  
+
+\textbf{Solution.} The states represent the number of shoes left at the front door. This also accounts for the shoes left at the back door inherently.
+$$
+  \begin{aligned}
+  SS &= \{ 0, 1, 2, 3 \} \\
+  P &=
+    \begin{bmatrix}
+      0.5 & 0.5 & 0 & 0\\
+      0.5 & 0.5 & 0.5 & 0\\
+      0 & 0.5 & 0.5 & 0.5\\
+      0 & 0 & 0.5 & 0.5\\
+    \end{bmatrix} \\
+  \end{aligned}
+$$ 
+  
+
+\textbf{Solution.} Since there is equal probabilities that he runs through either door, and each pair of shoes he uses is also equally likely. The probablity he runs barefoot is $\frac{1}{3+1} = 0.25$  
+
+# Problem 6  
+In a Binary Symmetric (Communication) Channel (BSC) data is sent data is sent using bits 0 and 1. Whenthe source and the destination are far apart, there are repeaters that decode the bit and transmit generate asignal. However due to noise, there decoding error, i.e., there a probability $\alpha$ that a bit 0 will be decodedas (and hence transmitted) as 1. Similarly, $\beta$ is the probability that a bit 1 will be decoded as (and hencetransmitted as) 1. Let $X_0$ be the bit’s initial parity and and let $X_n$ be the bits parity after thenth repeater.  
+
+## 6.1
+$$
+  \begin{aligned}
+    P &= 
+      \begin{bmatrix}
+      1- \alpha & \alpha \\
+      1 - \beta & \beta \\
+    \end{bmatrix} \\
+  \end{aligned}
+$$
+
+## 6.2
+$$
+  \begin{aligned}
+    \begin{bmatrix} 0.8 & 0.2 \end{bmatrix} * P &= \\
+    &= \begin{bmatrix} 0.8(1 - \alpha) + 0.2(1-\beta) & 0.8\alpha + 0.2\beta \end{bmatrix}
+  \end{aligned}
+$$
+  
+## 6.3
+$$
+  \begin{aligned}
+     \begin{bmatrix} 0.8 & 0.2 \end{bmatrix} * P^5
+  \end{aligned}
+$$
+  
 
 # Classmate Collaborators
 
 Inclulde the names and email IDs of everyone you collaborated with. You are free to discuss with your peers but everyone's work must be individual.
+
+1. Brendan Gerrity, bgerrity@ucdavis.edu
